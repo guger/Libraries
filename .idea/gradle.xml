@@ -8,6 +8,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/circularimagebutton" />
+            <option value="$PROJECT_DIR$/datetimepickerdialog" />
             <option value="$PROJECT_DIR$/sample" />
           </set>
         </option>
