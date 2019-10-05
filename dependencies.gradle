@@ -1,0 +1,75 @@
+/*
+ * Copyright (c) 2019 - Daniel Guger
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Shared file between builds so that they can all use the same dependencies and
+ * maven repositories.
+ **/
+
+ext.deps = [:]
+
+deps.gradle = "3.5.1"
+
+def test = [:]
+test.junit = "4.12"
+test.truth = "1.0"
+test.androidx_test = "1.2.0"
+test.mockito = "2.27.0"
+test.mockitokotlin = "2.1.0"
+test.threetenbp = "1.4.0"
+test.arch_core = "2.1.0-rc01"
+test.ext = "1.1.1"
+test.espresso = "3.2.0"
+test.leakcanary = "1.6.3"
+deps.test = test
+
+def kotlin = [:]
+kotlin.common = "1.3.50"
+kotlin.coroutines = "1.3.1"
+kotlin.anko = "0.10.8"
+deps.kotlin = kotlin
+
+def androidx = [:]
+androidx.core = "1.1.0"
+androidx.appcompat = "1.1.0"
+androidx.annotation = "1.1.0"
+androidx.fragment = "1.1.0"
+androidx.preference = "1.1.0"
+androidx.biometric = "1.0.0-beta02"
+androidx.viewpager2 = "1.0.0-beta04"
+androidx.recyclerview = "1.1.0-beta04"
+androidx.cardview = "1.0.0"
+androidx.constraintlayout = "1.1.3"
+deps.androidx = androidx
+
+def google = [:]
+google.material = "1.1.0-beta01"
+google.flexbox = "1.1.0"
+deps.google = google
+
+def arch = [:]
+arch.lifecycle = "2.2.0-alpha05"
+arch.navigation = "2.1.0"
+arch.paging = "2.1.0"
+arch.room = "2.2.0-rc01"
+arch.work = "2.2.0"
+deps.arch = arch
+
+def libs = [:]
+libs.threetenabp = "1.2.1"
+deps.libs = libs
+
+ext.deps = deps

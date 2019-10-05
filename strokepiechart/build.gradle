@@ -17,6 +17,9 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+
+apply from: '../dependencies.gradle'
+
 android {
     compileSdkVersion 29
 
@@ -43,12 +46,12 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    testImplementation "junit:junit:$deps.test.junit"
+    androidTestImplementation "androidx.test.ext:junit:$deps.test.ext"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$deps.test.espresso"
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$deps.kotlin.common"
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.1.0'
+    implementation "androidx.core:core-ktx:$deps.androidx.core"
+    implementation "androidx.appcompat:appcompat:$deps.androidx.appcompat"
 }
