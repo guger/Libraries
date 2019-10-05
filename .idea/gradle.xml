@@ -11,9 +11,11 @@
             <option value="$PROJECT_DIR$/circularimagebutton" />
             <option value="$PROJECT_DIR$/datetimepickerdialog" />
             <option value="$PROJECT_DIR$/sample" />
+            <option value="$PROJECT_DIR$/strokepiechart" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
+        <option name="testRunner" value="PLATFORM" />
       </GradleProjectSettings>
     </option>
   </component>

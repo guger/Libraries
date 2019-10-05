@@ -1,1 +1,1 @@
-include ':sample', ':circularimagebutton', ':datetimepickerdialog'
+include ':sample', ':circularimagebutton', ':datetimepickerdialog', ':strokepiechart'
