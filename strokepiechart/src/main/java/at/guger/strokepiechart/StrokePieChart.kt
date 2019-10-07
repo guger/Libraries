@@ -75,6 +75,11 @@ class StrokePieChart @JvmOverloads constructor(context: Context, attrs: Attribut
             field = value
             invalidate()
         }
+    var isBold: Boolean = false
+        set(value) {
+            field = value
+            invalidate()
+        }
 
     var chartRect: RectF = RectF()
 
@@ -95,8 +100,10 @@ class StrokePieChart @JvmOverloads constructor(context: Context, attrs: Attribut
         textSize = typedArray.getDimension(R.styleable.StrokePieChart_textSize, 0.0f).takeIf { it > 0 }
         textColor = typedArray.getColor(R.styleable.StrokePieChart_textColor, Color.WHITE)
 
-        val textAppearanceResId = typedArray.getResourceId(R.styleable.StrokePieChart_textAppearance, -1)
-        typeface = textAppearanceResId.takeIf { it > 0 }?.let { ResourcesCompat.getFont(context, it) }
+        val fontId = typedArray.getResourceId(R.styleable.StrokePieChart_fontResId, -1)
+        typeface = fontId.takeIf { it > 0 }?.let { ResourcesCompat.getFont(context, it) }
+
+        isBold = typedArray.getBoolean(R.styleable.StrokePieChart_bold, false)
 
         color = typedArray.getColor(R.styleable.StrokePieChart_defaultColor, Color.BLACK)
 
@@ -219,6 +226,7 @@ class StrokePieChart @JvmOverloads constructor(context: Context, attrs: Attribut
             paint.color = textColor
             paint.textSize = textSize ?: chartRect.height() / 3
             paint.typeface = typeface ?: Typeface.DEFAULT_BOLD
+            paint.isFakeBoldText = isBold
             paint.isAntiAlias = true
 
             val textBounds = Rect()

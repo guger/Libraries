@@ -21,7 +21,8 @@
         <attr name="strokeWidth" format="dimension" />
         <attr name="roundedEdges" format="boolean" />
         <attr name="text" format="string" />
-        <attr name="textAppearance" format="reference" />
+        <attr name="fontResId" format="integer" />
+        <attr name="bold" format="boolean" />
         <attr name="textSize" format="dimension" />
         <attr name="textColor" format="color" />
     </declare-styleable>
