@@ -40,7 +40,7 @@ class StrokePieChartSampleFragment : Fragment(R.layout.fragment_sample_strokepie
                 Entry(100f, Color.GREEN)
             )
         )
-
+        
         mStrokePieChart.startAnimation()
     }
 }

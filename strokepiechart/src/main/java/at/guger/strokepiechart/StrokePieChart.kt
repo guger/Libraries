@@ -40,7 +40,15 @@ class StrokePieChart @JvmOverloads constructor(context: Context, attrs: Attribut
     private var animator: ValueAnimator? = null
 
     var animationDuration: Long = 300
-    var distance: Float = 5.0f
+
+    /**
+     * The distance between two entries in degrees.
+     */
+    var distance: Float = 3.5f
+        set(value) {
+            field = value
+            invalidate()
+        }
 
     var roundEdges: Boolean = false
         set(value) {
@@ -82,11 +90,10 @@ class StrokePieChart @JvmOverloads constructor(context: Context, attrs: Attribut
             invalidate()
         }
 
-    var chartRect: RectF = RectF()
+    private val chartRect: RectF = RectF()
 
-    var entries: ArrayList<Float> = ArrayList()
-        private set
-    var colors: ArrayList<Int> = ArrayList()
+    private var entries: ArrayList<Float> = ArrayList()
+    private var colors: ArrayList<Int> = ArrayList()
 
     //endregion
 
@@ -107,6 +114,8 @@ class StrokePieChart @JvmOverloads constructor(context: Context, attrs: Attribut
         isBold = typedArray.getBoolean(R.styleable.StrokePieChart_bold, false)
 
         color = typedArray.getColor(R.styleable.StrokePieChart_defaultColor, Color.BLACK)
+
+        distance = typedArray.getFloat(R.styleable.StrokePieChart_distance, distance)
 
         typedArray.recycle()
     }
@@ -151,16 +160,16 @@ class StrokePieChart @JvmOverloads constructor(context: Context, attrs: Attribut
         if (entries.isNotEmpty()) {
             check(colors.size == entries.size) { "Color and Stats list must have the same size." }
 
-            entries.forEachIndexed { index, stat ->
+            entries.forEachIndexed { index, value ->
                 drawChart(
                     canvas,
                     colors[index],
-                    if (index == 0) 0.0f else calculatePercents(entries.subList(0, index).sum()),
-                    calculatePercents(stat)
+                    if (index == 0) 0.0f else entries.subList(0, index).sum(),
+                    value
                 )
             }
         } else {
-            drawChart(canvas, color, 0.0f, calculatePercents(FULL_CIRCLE_ANGLE))
+            drawChart(canvas, color, 0.0f, FULL_CIRCLE_ANGLE)
         }
 
         drawText(canvas)
@@ -171,19 +180,23 @@ class StrokePieChart @JvmOverloads constructor(context: Context, attrs: Attribut
     //region Methods
 
     fun setEntries(entriesList: ArrayList<Entry>) {
-        entriesList.sortBy { it.value }
+        val sortedEntries = entriesList.filter { it.value > 0 }.sortedBy { it.value }
+
+        entriesSum = sortedEntries.sumByDouble { it.value.toDouble() }.toFloat()
 
         animator?.cancel()
 
         entries = ArrayList()
         colors = ArrayList()
 
-        for (stat in entriesList.filter { it.value > 0 }) {
-            entries.add(stat.value)
-            colors.add(stat.color)
-        }
+        val distanceSum = entriesList.size * distance
 
-        entriesSum = entriesList.sumByDouble { it.value.toDouble() }.toFloat()
+        for (entry in sortedEntries) {
+            entries.add((FULL_CIRCLE_ANGLE - distanceSum) / (entriesSum) * entry.value)
+            colors.add(entry.color)
+            entries.add(distance)
+            colors.add(Color.TRANSPARENT)
+        }
 
         invalidate()
     }
@@ -219,11 +232,9 @@ class StrokePieChart @JvmOverloads constructor(context: Context, attrs: Attribut
         paint.isAntiAlias = true
         if (roundEdges) paint.strokeCap = Paint.Cap.ROUND
 
-        val offset = distance / 2
-
         val base = if (entries.size <= 1) 90.0f else 135.0f
 
-        canvas?.drawArc(chartRect, base + start + offset, degree - offset, false, paint)
+        canvas?.drawArc(chartRect, base + start, degree, false, paint)
     }
 
     private fun drawText(canvas: Canvas?) {
@@ -242,8 +253,6 @@ class StrokePieChart @JvmOverloads constructor(context: Context, attrs: Attribut
             canvas?.drawText(it, (((width - textBounds.right) / 2).toFloat()), ((height + textBounds.height()) / 2).toFloat(), paint)
         }
     }
-
-    private fun calculatePercents(value: Float) = FULL_CIRCLE_ANGLE / entriesSum * value
 
     //endregion
 
