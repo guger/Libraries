@@ -37,6 +37,7 @@ class StrokePieChart @JvmOverloads constructor(context: Context, attrs: Attribut
     private val defaultSize: Int
     private val density: Float
     private var entriesSum: Float = 0.0f
+    private var animator: ValueAnimator? = null
 
     var animationDuration: Long = 300
     var distance: Float = 5.0f
@@ -172,24 +173,28 @@ class StrokePieChart @JvmOverloads constructor(context: Context, attrs: Attribut
     fun setEntries(entriesList: ArrayList<Entry>) {
         entriesList.sortBy { it.value }
 
+        animator?.cancel()
+
         entries = ArrayList()
         colors = ArrayList()
 
-        for (stat in entriesList) {
+        for (stat in entriesList.filter { it.value > 0 }) {
             entries.add(stat.value)
             colors.add(stat.color)
         }
 
         entriesSum = entriesList.sumByDouble { it.value.toDouble() }.toFloat()
+
         invalidate()
     }
 
     fun startAnimation() {
-        val animatedEntries = ArrayList(entries)
+        val currentEntries = entries
+        val animatedEntries = ArrayList(currentEntries)
 
         val animatedDistance = distance
 
-        ValueAnimator.ofFloat(0.0f, 1.0f).apply {
+        animator = ValueAnimator.ofFloat(0.0f, 1.0f).apply {
             duration = animationDuration
             interpolator = DecelerateInterpolator()
 
@@ -202,7 +207,8 @@ class StrokePieChart @JvmOverloads constructor(context: Context, attrs: Attribut
                     invalidate()
                 }
             }
-        }.start()
+            start()
+        }
     }
 
     private fun drawChart(canvas: Canvas?, @ColorInt color: Int, start: Float, degree: Float) {

@@ -55,3 +55,8 @@ dependencies {
     implementation "androidx.core:core-ktx:$deps.androidx.core"
     implementation "androidx.appcompat:appcompat:$deps.androidx.appcompat"
 }
+
+task buildSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
