@@ -50,6 +50,8 @@ class StrokePieChart @JvmOverloads constructor(context: Context, attrs: Attribut
             invalidate()
         }
 
+    private var currentDistance: Float = distance
+
     var roundEdges: Boolean = false
         set(value) {
             field = value
@@ -73,6 +75,7 @@ class StrokePieChart @JvmOverloads constructor(context: Context, attrs: Attribut
             invalidate()
         }
     var textSize: Float?
+
     @ColorInt
     var textColor: Int = Color.WHITE
         set(value) {
@@ -92,8 +95,8 @@ class StrokePieChart @JvmOverloads constructor(context: Context, attrs: Attribut
 
     private val chartRect: RectF = RectF()
 
-    private var entries: ArrayList<Float> = ArrayList()
-    private var colors: ArrayList<Int> = ArrayList()
+    private var entries = mutableListOf<Float>()
+    private var colors = mutableListOf<Int>()
 
     //endregion
 
@@ -179,17 +182,19 @@ class StrokePieChart @JvmOverloads constructor(context: Context, attrs: Attribut
 
     //region Methods
 
-    fun setEntries(entriesList: ArrayList<Entry>) {
+    fun setEntries(entriesList: List<Entry>) {
         val sortedEntries = entriesList.filter { it.value > 0 }.sortedBy { it.value }
 
         entriesSum = sortedEntries.sumByDouble { it.value.toDouble() }.toFloat()
 
         animator?.cancel()
 
-        entries = ArrayList()
-        colors = ArrayList()
+        entries = mutableListOf()
+        colors = mutableListOf()
 
-        val distanceSum = entriesList.size * distance
+        currentDistance = distance
+
+        val distanceSum = sortedEntries.size * distance
 
         for (entry in sortedEntries) {
             entries.add((FULL_CIRCLE_ANGLE - distanceSum) / (entriesSum) * entry.value)
@@ -202,10 +207,9 @@ class StrokePieChart @JvmOverloads constructor(context: Context, attrs: Attribut
     }
 
     fun startAnimation() {
-        val currentEntries = entries
-        val animatedEntries = ArrayList(currentEntries)
+        val animatedEntries = entries.toList()
 
-        val animatedDistance = distance
+        val animatedDistance = currentDistance
 
         animator = ValueAnimator.ofFloat(0.0f, 1.0f).apply {
             duration = animationDuration
@@ -216,7 +220,7 @@ class StrokePieChart @JvmOverloads constructor(context: Context, attrs: Attribut
 
                 entries.forEachIndexed { index, _ ->
                     entries[index] = animatedEntries[index] * value
-                    distance = animatedDistance * value
+                    currentDistance = animatedDistance * value
                     invalidate()
                 }
             }
@@ -232,7 +236,7 @@ class StrokePieChart @JvmOverloads constructor(context: Context, attrs: Attribut
         paint.isAntiAlias = true
         if (roundEdges) paint.strokeCap = Paint.Cap.ROUND
 
-        val base = if (entries.size <= 1) 90.0f else 135.0f
+        val base = if (entries.size <= 2) 90.0f else 270.0f
 
         canvas?.drawArc(chartRect, base + start, degree, false, paint)
     }

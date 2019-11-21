@@ -24,23 +24,33 @@ import at.guger.libraries.R
 import at.guger.strokepiechart.Entry
 import at.guger.strokepiechart.StrokePieChart
 import kotlinx.android.synthetic.main.fragment_sample_strokepiechart.*
+import kotlin.random.Random
 
 /**
  * Fragment showing a [StrokePieChart].
  */
 class StrokePieChartSampleFragment : Fragment(R.layout.fragment_sample_strokepiechart) {
 
+    private val entries = mutableListOf<Entry>()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mStrokePieChart.setEntries(
-            arrayListOf(
-                Entry(50f, Color.BLUE),
-                Entry(50f, Color.RED),
-                Entry(100f, Color.GREEN)
-            )
-        )
-        
+        btnStrokePieChartAddEntry.setOnClickListener { addEntry() }
+        btnStrokePieChartClear.setOnClickListener { clearEntries() }
+    }
+
+    fun addEntry() {
+        entries.add(Entry(Random.nextInt(360).toFloat(), Color.rgb(Random.nextInt(255), Random.nextInt(255), Random.nextInt(255))))
+
+        mStrokePieChart.setEntries(entries)
+        mStrokePieChart.startAnimation()
+    }
+
+    fun clearEntries() {
+        entries.clear()
+
+        mStrokePieChart.setEntries(entries)
         mStrokePieChart.startAnimation()
     }
 }

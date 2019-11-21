@@ -3,4 +3,6 @@
     <string name="StrokePieChart">StrokePieChart</string>
     <string name="ShowDateTimePicker">Show DateTimePicker</string>
     <string name="DateTimePicker">DateTimePicker</string>
+    <string name="AddEntry">Add Entry</string>
+    <string name="Clear">Clear</string>
 </resources>
